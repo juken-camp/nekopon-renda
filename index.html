@@ -1,0 +1,1378 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no, maximum-scale=1.0, minimum-scale=1.0">
+    <title>🐱 NEKOPON RENDA 🐱</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800&display=swap');
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            -webkit-touch-callout: none;
+            -webkit-user-select: none;
+            -khtml-user-select: none;
+            -moz-user-select: none;
+            -ms-user-select: none;
+            user-select: none;
+        }
+        
+        body {
+            font-family: 'Nunito', sans-serif;
+            background: #ffffff;
+            color: #5D4037;
+            height: 100vh;
+            position: relative;
+            font-size: 14px;
+            touch-action: manipulation;
+            -webkit-text-size-adjust: 100%;
+            overflow-y: auto;
+        }
+        
+        /* シンプル背景 */
+        body::before {
+            content: '';
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-image: radial-gradient(circle at 30% 30%, rgba(139, 69, 19, 0.05) 2px, transparent 2px);
+            background-size: 100px 100px;
+            z-index: 0;
+        }
+        
+        .container {
+            position: relative;
+            width: 100vw;
+            min-height: calc(100vh - 280px);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: flex-start;
+            z-index: 10;
+            padding: 10px;
+            padding-bottom: 300px;
+        }
+        
+        .title {
+            font-size: 1.4em;
+            margin: 5px 0;
+            background: linear-gradient(45deg, #8D4500, #D2691E, #FF8C00);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            text-align: center;
+            font-weight: 700;
+            letter-spacing: 1px;
+        }
+        
+        .stats {
+            display: flex;
+            gap: 8px;
+            margin: 8px 0;
+            font-size: 0.8em;
+            z-index: 10;
+        }
+        
+        .stat {
+            text-align: center;
+            background: linear-gradient(135deg, #ffffff 0%, #FFF8DC 100%);
+            padding: 4px 8px;
+            border-radius: 8px;
+            border: 1px solid #D2691E;
+            box-shadow: 0 2px 8px rgba(210, 105, 30, 0.15);
+            min-width: 45px;
+        }
+        
+        .stat-label {
+            font-size: 0.7em;
+            opacity: 0.8;
+            font-weight: 600;
+            color: #5D4037;
+        }
+        
+        .stat-value {
+            font-weight: 700;
+            color: #8D4500;
+            font-size: 1em;
+            margin-top: 1px;
+        }
+        
+        .course-selection {
+            margin: 8px 0;
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            max-width: 350px;
+            width: 100%;
+        }
+        
+        .course-selection h2 {
+            margin: 8px 0;
+            color: #8D4500;
+            font-size: 0.9em;
+            font-weight: 700;
+            text-align: center;
+        }
+        
+        .course-buttons {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+            width: 100%;
+        }
+        
+        .course-btn {
+            padding: 12px 20px;
+            font-size: 0.85em;
+            background: linear-gradient(135deg, #D2691E, #8D4500);
+            color: white;
+            border: none;
+            border-radius: 25px;
+            cursor: pointer;
+            font-weight: 600;
+            font-family: 'Nunito', sans-serif;
+            transition: all 0.3s ease;
+            box-shadow: 0 3px 10px rgba(139, 69, 19, 0.25);
+            text-align: center;
+            width: 100%;
+            touch-action: manipulation;
+        }
+        
+        .course-btn:active {
+            transform: scale(0.98);
+            box-shadow: 0 2px 5px rgba(139, 69, 19, 0.3);
+            background: linear-gradient(135deg, #FF8C00, #D2691E);
+        }
+        
+        .course-btn small {
+            display: block;
+            font-size: 0.8em;
+            opacity: 0.9;
+            margin-top: 2px;
+        }
+        
+        .game-area {
+            display: none;
+            text-align: center;
+            z-index: 10;
+            width: 95%;
+            max-width: 600px;
+            flex: 1;
+            flex-direction: column;
+            min-height: calc(100vh - 280px);
+        }
+        
+        .word-display {
+            font-size: 1.8em;
+            margin: 8px 0;
+            font-weight: 700;
+            min-height: 60px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            letter-spacing: 0.1em;
+            background: linear-gradient(135deg, #ffffff 0%, #FFF8DC 100%);
+            border-radius: 15px;
+            padding: 12px;
+            border: 2px solid #D2691E;
+            box-shadow: 0 4px 15px rgba(210, 105, 30, 0.15);
+        }
+        
+        .typed {
+            color: #2E7D32;
+            text-shadow: 0 0 10px rgba(46, 125, 50, 0.4);
+            animation: typedPop 0.3s ease;
+        }
+        
+        @keyframes typedPop {
+            0% { transform: scale(1.2); }
+            100% { transform: scale(1); }
+        }
+        
+        .current {
+            color: #8D4500;
+            background: rgba(139, 69, 19, 0.15);
+            padding: 2px 8px;
+            border-radius: 8px;
+            text-shadow: 0 0 15px rgba(139, 69, 19, 0.6);
+            animation: currentBlink 1s ease-in-out infinite alternate;
+        }
+        
+        @keyframes currentBlink {
+            0% { opacity: 1; }
+            100% { opacity: 0.7; }
+        }
+        
+        .remaining {
+            color: #999;
+            opacity: 0.6;
+        }
+        
+        .progress-bar {
+            width: 100%;
+            height: 8px;
+            background: linear-gradient(135deg, #f8f9fa, #e9ecef);
+            border-radius: 10px;
+            overflow: hidden;
+            margin: 8px 0;
+            border: 1px solid #D2691E;
+            box-shadow: inset 0 1px 3px rgba(0, 0, 0, 0.1);
+        }
+        
+        .progress-fill {
+            height: 100%;
+            background: linear-gradient(90deg, #FFE0B2, #D2691E, #8D4500);
+            width: 0%;
+            transition: width 0.4s ease;
+        }
+        
+        .combo-display {
+            position: absolute;
+            top: 8%;
+            right: 5%;
+            font-size: 0.9em;
+            font-weight: 700;
+            z-index: 15;
+        }
+        
+        .combo-text {
+            color: #FF8C00;
+            text-shadow: 0 0 15px rgba(255, 140, 0, 0.8);
+            animation: comboShine 0.6s ease-in-out infinite alternate;
+        }
+        
+        @keyframes comboShine {
+            0% { transform: scale(1); }
+            100% { transform: scale(1.1); }
+        }
+        
+        .result-screen {
+            display: none;
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            background: linear-gradient(135deg, #ffffff 0%, #FFF8DC 100%);
+            padding: 25px;
+            border-radius: 20px;
+            border: 2px solid #D2691E;
+            text-align: center;
+            z-index: 25;
+            box-shadow: 0 10px 30px rgba(210, 105, 30, 0.25);
+            min-width: 300px;
+            max-width: 90vw;
+        }
+        
+        .result-title {
+            font-size: 1.5em;
+            margin-bottom: 20px;
+            background: linear-gradient(45deg, #8D4500, #D2691E, #FF8C00);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            font-weight: 700;
+        }
+        
+        .restart-btn {
+            padding: 10px 20px;
+            font-size: 1em;
+            background: linear-gradient(135deg, #8D4500, #D2691E);
+            color: white;
+            border: none;
+            border-radius: 15px;
+            cursor: pointer;
+            font-weight: 600;
+            font-family: 'Nunito', sans-serif;
+            margin-top: 15px;
+            transition: all 0.3s ease;
+            box-shadow: 0 3px 10px rgba(139, 69, 19, 0.25);
+            touch-action: manipulation;
+        }
+        
+        .restart-btn:active {
+            transform: scale(0.98);
+            box-shadow: 0 2px 5px rgba(139, 69, 19, 0.3);
+        }
+        
+        .input-guide {
+            margin: 4px 0;
+            font-size: 0.7em;
+            color: #8D4500;
+            font-weight: 600;
+            background: rgba(210, 105, 30, 0.1);
+            padding: 3px 6px;
+            border-radius: 8px;
+            border: 1px solid rgba(210, 105, 30, 0.3);
+        }
+        
+        .romaji-display {
+            font-size: 1em;
+            margin: 4px 0;
+            font-weight: 600;
+            color: #666;
+            opacity: 0.8;
+        }
+        
+        /* iPhoneキーボード - 正方形ボタン */
+        .japanese-keyboard {
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            background: rgba(208, 213, 221, 0.95);
+            backdrop-filter: blur(10px);
+            border-top: 1px solid rgba(0, 0, 0, 0.1);
+            padding: 8px 4px 20px 4px;
+            z-index: 20;
+            height: 280px;
+            touch-action: manipulation;
+        }
+        
+        .keyboard-controls {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            margin-bottom: 6px;
+            padding: 0 8px;
+        }
+        
+        .input-mode-switch {
+            font-size: 0.7em;
+            padding: 4px 10px;
+            background: linear-gradient(135deg, #D2691E, #8D4500);
+            color: white;
+            border: none;
+            border-radius: 12px;
+            cursor: pointer;
+            font-weight: 600;
+            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.2);
+            touch-action: manipulation;
+        }
+        
+        .input-mode-switch:active {
+            transform: scale(0.95);
+        }
+        
+        /* キーボードレイアウト - 5列配置（左右にイラスト） */
+        .kana-grid {
+            display: grid;
+            grid-template-columns: 60px 1fr 1fr 1fr 60px;
+            grid-template-rows: repeat(4, 1fr);
+            gap: 8px;
+            height: 220px;
+            padding: 10px;
+            align-items: center;
+        }
+        
+        /* 装飾エリア */
+        .decoration-left, .decoration-right {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            height: 100%;
+            font-size: 1.5em;
+            color: #D2691E;
+            opacity: 0.6;
+        }
+        
+        .decoration-left {
+            grid-column: 1;
+            grid-row: 1 / -1;
+        }
+        
+        .decoration-right {
+            grid-column: 5;
+            grid-row: 1 / -1;
+        }
+        
+        /* 正方形キーデザイン */
+        .kana-key {
+            background: #ffffff;
+            color: #000000;
+            border: none;
+            border-radius: 6px;
+            font-size: 1.2em;
+            font-weight: 400;
+            cursor: pointer;
+            transition: all 0.1s ease;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            position: relative;
+            touch-action: manipulation;
+            box-shadow: 0 1px 0 rgba(0, 0, 0, 0.3), 0 2px 0 rgba(0, 0, 0, 0.15);
+            aspect-ratio: 1;
+            width: 100%;
+        }
+        
+        .kana-key:active {
+            background: #d1d5db;
+            transform: translateY(1px);
+            box-shadow: 0 0 0 rgba(0, 0, 0, 0.3), 0 1px 0 rgba(0, 0, 0, 0.15);
+        }
+        
+        /* 特殊キー */
+        .kana-key.special {
+            background: #acb2b9;
+            color: #000;
+            font-size: 0.9em;
+        }
+        
+        .kana-key.special:active {
+            background: #9ca3af;
+        }
+        
+        /* キー配置 */
+        .key-a { grid-column: 2; grid-row: 1; }
+        .key-ka { grid-column: 3; grid-row: 1; }
+        .key-sa { grid-column: 4; grid-row: 1; }
+        .key-ta { grid-column: 2; grid-row: 2; }
+        .key-na { grid-column: 3; grid-row: 2; }
+        .key-ha { grid-column: 4; grid-row: 2; }
+        .key-ma { grid-column: 2; grid-row: 3; }
+        .key-ya { grid-column: 3; grid-row: 3; }
+        .key-ra { grid-column: 4; grid-row: 3; }
+        .key-backspace { grid-column: 2; grid-row: 4; }
+        .key-dakuten { grid-column: 2; grid-row: 4; }
+        .key-wa { grid-column: 3; grid-row: 4; }
+        .key-punct { grid-column: 4; grid-row: 4; }
+        
+        /* フリック候補表示 */
+        .flick-popup {
+            position: absolute;
+            bottom: 100%;
+            left: 50%;
+            transform: translateX(-50%);
+            background: rgba(255, 255, 255, 0.95);
+            color: #000;
+            border-radius: 8px;
+            padding: 4px;
+            font-size: 0.9em;
+            z-index: 100;
+            display: none;
+            white-space: nowrap;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.3);
+            margin-bottom: 5px;
+            border: 1px solid rgba(0, 0, 0, 0.2);
+        }
+        
+        .flick-chars {
+            display: grid;
+            grid-template-columns: 1fr 1fr 1fr;
+            grid-template-rows: 1fr 1fr 1fr;
+            gap: 2px;
+            width: 80px;
+            height: 80px;
+        }
+        
+        .flick-char {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 4px;
+            background: transparent;
+            transition: all 0.2s ease;
+            font-size: 0.9em;
+        }
+        
+        .flick-char.center {
+            grid-column: 2;
+            grid-row: 2;
+        }
+        
+        .flick-char.up {
+            grid-column: 2;
+            grid-row: 1;
+        }
+        
+        .flick-char.right {
+            grid-column: 3;
+            grid-row: 2;
+        }
+        
+        .flick-char.down {
+            grid-column: 2;
+            grid-row: 3;
+        }
+        
+        .flick-char.left {
+            grid-column: 1;
+            grid-row: 2;
+        }
+        
+        .flick-char.active {
+            background: #007AFF;
+            color: white;
+            transform: scale(1.2);
+        }
+        
+        .effect-particles {
+            position: fixed;
+            pointer-events: none;
+            z-index: 8;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+        }
+        
+        .particle {
+            position: absolute;
+            font-size: 1.5em;
+            animation: particleFloat 2s ease-out forwards;
+        }
+        
+        @keyframes particleFloat {
+            0% { transform: scale(0) rotate(0deg); opacity: 1; }
+            20% { transform: scale(1.2) rotate(90deg); opacity: 1; }
+            100% { transform: scale(0.8) rotate(360deg) translateY(-120px); opacity: 0; }
+        }
+        
+        .explosion-effect {
+            position: absolute;
+            width: 60px;
+            height: 60px;
+            border-radius: 50%;
+            animation: explosionGrow 0.5s ease-out forwards;
+            z-index: 7;
+        }
+        
+        @keyframes explosionGrow {
+            0% { transform: scale(0); opacity: 0.6; }
+            100% { transform: scale(2); opacity: 0; }
+        }
+    </style>
+</head>
+<body>
+    <div class="effect-particles" id="effectParticles"></div>
+    <div class="container">
+        <h1 class="title">🐱 NEKOPON RENDA 🐱</h1>
+        
+        <div class="stats">
+            <div class="stat">
+                <div class="stat-label">⏰ TIME</div>
+                <div class="stat-value" id="time">60</div>
+            </div>
+            <div class="stat">
+                <div class="stat-label">✨ SCORE</div>
+                <div class="stat-value" id="score">0</div>
+            </div>
+            <div class="stat">
+                <div class="stat-label">🔥 RATE</div>
+                <div class="stat-value" id="accuracy">100%</div>
+            </div>
+        </div>
+        
+        <div id="menu">
+            <div class="course-selection">
+                <h2>🏆 コースを選んでにゃ〜 🏆</h2>
+                <div class="course-buttons">
+                    <button class="course-btn" onclick="startGame('easy')">
+                        🐾 かんたん
+                        <small>目標: 1000pt</small>
+                    </button>
+                    <button class="course-btn" onclick="startGame('normal')">
+                        🐱 ふつう
+                        <small>目標: 2000pt</small>
+                    </button>
+                    <button class="course-btn" onclick="startGame('hard')">
+                        😸 むずかしい
+                        <small>目標: 3500pt</small>
+                    </button>
+                    <button class="course-btn" onclick="startGame('expert')">
+                        👑 ちょうむずかしい
+                        <small>目標: 5000pt</small>
+                    </button>
+                </div>
+            </div>
+            <div class="input-guide">
+                💡 日本語で入力（フリック/ケータイ入力対応）
+            </div>
+        </div>
+        
+        <div class="game-area" id="game">
+            <div class="progress-bar">
+                <div class="progress-fill" id="progress"></div>
+            </div>
+            <div class="word-display" id="word"></div>
+            <div class="romaji-display" id="romaji"></div>
+            <div class="input-guide">
+                ひらがなで入力してください
+            </div>
+        </div>
+        
+        <div class="combo-display" id="combo"></div>
+        
+        <div class="result-screen" id="result">
+            <div class="result-title">🎊 結果発表にゃ〜！ 🎊</div>
+            <div id="result-text" style="font-size: 1em; line-height: 1.6; color: #8D4500; font-weight: 600;"></div>
+            <button class="restart-btn" onclick="resetGame()">🐱 もう一度にゃ〜</button>
+        </div>
+    </div>
+    
+    <!-- かなキーボード - 正方形配置 -->
+    <div class="japanese-keyboard" id="japaneseKeyboard">
+        <div class="keyboard-controls">
+            <button class="input-mode-switch" id="inputModeSwitch" onclick="toggleInputMode()">
+                フリック入力
+            </button>
+        </div>
+        
+        <div class="kana-grid">
+            <!-- 左側装飾 -->
+            <div class="decoration-left">
+                <div>🌸</div>
+                <div>🐾</div>
+                <div>✨</div>
+                <div>🎵</div>
+            </div>
+            
+            <!-- キーボード本体 -->
+            <div class="kana-key key-a" data-chars="あいうえお">あ</div>
+            <div class="kana-key key-ka" data-chars="かきくけこ">か</div>
+            <div class="kana-key key-sa" data-chars="さしすせそ">さ</div>
+            
+            <div class="kana-key key-ta" data-chars="たちつてと">た</div>
+            <div class="kana-key key-na" data-chars="なにぬねの">な</div>
+            <div class="kana-key key-ha" data-chars="はひふへほ">は</div>
+            
+            <div class="kana-key key-ma" data-chars="まみむめも">ま</div>
+            <div class="kana-key key-ya" data-chars="やゆよ">や</div>
+            <div class="kana-key key-ra" data-chars="らりるれろ">ら</div>
+            
+            <div class="kana-key special key-dakuten" onclick="toggleDakuten()">゛゜小</div>
+            <div class="kana-key special key-wa" data-chars="わをんー">わー</div>
+            <div class="kana-key special key-punct" data-chars="、。？！">、。？！</div>
+            
+            <!-- 右側装飾 -->
+            <div class="decoration-right">
+                <div>🌟</div>
+                <div>💫</div>
+                <div>🎀</div>
+                <div>🍀</div>
+            </div>
+        </div>
+    </div>
+    
+    <script>
+        // ピンチズーム無効化
+        document.addEventListener('gesturestart', function (e) {
+            e.preventDefault();
+        });
+        
+        document.addEventListener('gesturechange', function (e) {
+            e.preventDefault();
+        });
+        
+        document.addEventListener('gestureend', function (e) {
+            e.preventDefault();
+        });
+        
+        // ダブルタップズーム無効化
+        let lastTouchEnd = 0;
+        document.addEventListener('touchend', function (event) {
+            const now = (new Date()).getTime();
+            if (now - lastTouchEnd <= 300) {
+                event.preventDefault();
+            }
+            lastTouchEnd = now;
+        }, false);
+        
+        // ゲーム状態
+        let game = {
+            active: false,
+            course: '',
+            words: [],
+            currentWord: 0,
+            currentChar: 0,
+            currentInput: '',
+            targetWord: '',
+            score: 0,
+            time: 60,
+            correct: 0,
+            total: 0,
+            combo: 0,
+            maxCombo: 0,
+            timer: null,
+            audioContext: null,
+            flickMode: true, // フリック入力のON/OFF
+            dakutenMode: false // 濁点・小文字モード
+        };
+        
+        // タップ入力管理
+        let tapData = {
+            currentKey: null,
+            tapCount: 0,
+            tapTimer: null
+        };
+        
+        // 日常的な単語リスト
+        const dailyWords = {
+            easy: [
+                'あさ', 'ひる', 'よる', 'あめ', 'かぜ', 'そら', 'ほし', 'つき', 'ひ', 'みず',
+                'やま', 'うみ', 'いえ', 'みち', 'はな', 'き', 'とり', 'いぬ', 'ねこ', 'さかな'
+            ],
+            normal: [
+                'あさごはん', 'ひるごはん', 'ばんごはん', 'がっこう', 'としょかん', 'びょういん',
+                'こうえん', 'でんしゃ', 'じどうしゃ', 'かいもの', 'りょこう', 'しゅみ'
+            ],
+            hard: [
+                'たんじょうび', 'クリスマス', 'おしょうがつ', 'コンピューター', 'インターネット',
+                'スマートフォン', 'プログラミング', 'アニメーション'
+            ],
+            expert: [
+                'プロフェッショナル', 'エンターテインメント', 'コミュニケーション', 'インフォメーション',
+                'アドミニストレーション', 'テクノロジー', 'エンバイロンメント'
+            ]
+        };
+        
+        // ローマ字→ひらがな変換
+        function toRomaji(hiragana) {
+            let result = '';
+            let i = 0;
+            while (i < hiragana.length) {
+                let char = hiragana[i];
+                let nextChar = i + 1 < hiragana.length ? hiragana[i + 1] : '';
+                let twoCharRomaji = convertTwoChar(char, nextChar);
+                if (twoCharRomaji) {
+                    result += twoCharRomaji;
+                    i += 2;
+                } else {
+                    let oneCharRomaji = convertOneChar(char);
+                    result += oneCharRomaji;
+                    i += 1;
+                }
+            }
+            return result;
+        }
+        
+        function convertTwoChar(char1, char2) {
+            const twoCharTable = {
+                'きゃ': 'kya', 'きゅ': 'kyu', 'きょ': 'kyo',
+                'ぎゃ': 'gya', 'ぎゅ': 'gyu', 'ぎょ': 'gyo',
+                'しゃ': 'sha', 'しゅ': 'shu', 'しょ': 'sho',
+                'じゃ': 'ja', 'じゅ': 'ju', 'じょ': 'jo',
+                'ちゃ': 'cha', 'ちゅ': 'chu', 'ちょ': 'cho',
+                'にゃ': 'nya', 'にゅ': 'nyu', 'にょ': 'nyo',
+                'ひゃ': 'hya', 'ひゅ': 'hyu', 'ひょ': 'hyo',
+                'びゃ': 'bya', 'びゅ': 'byu', 'びょ': 'byo',
+                'ぴゃ': 'pya', 'ぴゅ': 'pyu', 'ぴょ': 'pyo',
+                'みゃ': 'mya', 'みゅ': 'myu', 'みょ': 'myo',
+                'りゃ': 'rya', 'りゅ': 'ryu', 'りょ': 'ryo'
+            };
+            return twoCharTable[char1 + char2] || null;
+        }
+        
+        function convertOneChar(char) {
+            const oneCharTable = {
+                'あ': 'a', 'い': 'i', 'う': 'u', 'え': 'e', 'お': 'o',
+                'か': 'ka', 'き': 'ki', 'く': 'ku', 'け': 'ke', 'こ': 'ko',
+                'が': 'ga', 'ぎ': 'gi', 'ぐ': 'gu', 'げ': 'ge', 'ご': 'go',
+                'さ': 'sa', 'し': 'shi', 'す': 'su', 'せ': 'se', 'そ': 'so',
+                'ざ': 'za', 'じ': 'ji', 'ず': 'zu', 'ぜ': 'ze', 'ぞ': 'zo',
+                'た': 'ta', 'ち': 'chi', 'つ': 'tsu', 'て': 'te', 'と': 'to',
+                'だ': 'da', 'ぢ': 'di', 'づ': 'du', 'で': 'de', 'ど': 'do',
+                'な': 'na', 'に': 'ni', 'ぬ': 'nu', 'ね': 'ne', 'の': 'no',
+                'は': 'ha', 'ひ': 'hi', 'ふ': 'fu', 'へ': 'he', 'ほ': 'ho',
+                'ば': 'ba', 'び': 'bi', 'ぶ': 'bu', 'べ': 'be', 'ぼ': 'bo',
+                'ぱ': 'pa', 'ぴ': 'pi', 'ぷ': 'pu', 'ぺ': 'pe', 'ぽ': 'po',
+                'ま': 'ma', 'み': 'mi', 'む': 'mu', 'め': 'me', 'も': 'mo',
+                'や': 'ya', 'ゆ': 'yu', 'よ': 'yo',
+                'ら': 'ra', 'り': 'ri', 'る': 'ru', 'れ': 're', 'ろ': 'ro',
+                'わ': 'wa', 'ゐ': 'wi', 'ゑ': 'we', 'を': 'wo', 'ん': 'n',
+                'ー': '-', 'っ': '', 'ゃ': 'ya', 'ゅ': 'yu', 'ょ': 'yo'
+            };
+            return oneCharTable[char] || char;
+        }
+        
+        // 音声システム
+        function initAudioContext() {
+            try {
+                if (!game.audioContext || game.audioContext.state === 'closed') {
+                    game.audioContext = new (window.AudioContext || window.webkitAudioContext)();
+                }
+                if (game.audioContext.state === 'suspended') {
+                    game.audioContext.resume();
+                }
+                return game.audioContext;
+            } catch (e) {
+                return null;
+            }
+        }
+        
+        function playNekoSound(type = 'success', intensity = 1) {
+            try {
+                const audioContext = initAudioContext();
+                if (!audioContext) return;
+                
+                if (type === 'success') {
+                    const osc = audioContext.createOscillator();
+                    const gain = audioContext.createGain();
+                    osc.connect(gain);
+                    gain.connect(audioContext.destination);
+                    osc.frequency.setValueAtTime(660, audioContext.currentTime);
+                    gain.gain.setValueAtTime(0.1 * intensity, audioContext.currentTime);
+                    gain.gain.exponentialRampToValueAtTime(0.001, audioContext.currentTime + 0.2);
+                    osc.start(audioContext.currentTime);
+                    osc.stop(audioContext.currentTime + 0.2);
+                } else if (type === 'complete') {
+                    const frequencies = [523, 659, 784];
+                    frequencies.forEach((freq, i) => {
+                        setTimeout(() => {
+                            try {
+                                const osc = audioContext.createOscillator();
+                                const gain = audioContext.createGain();
+                                osc.connect(gain);
+                                gain.connect(audioContext.destination);
+                                osc.frequency.setValueAtTime(freq, audioContext.currentTime);
+                                gain.gain.setValueAtTime(0.08 * intensity, audioContext.currentTime);
+                                gain.gain.exponentialRampToValueAtTime(0.001, audioContext.currentTime + 0.3);
+                                osc.start(audioContext.currentTime);
+                                osc.stop(audioContext.currentTime + 0.3);
+                            } catch (e) {}
+                        }, i * 80);
+                    });
+                }
+            } catch (e) {
+                game.audioContext = null;
+            }
+        }
+        
+        // パーティクルエフェクト
+        function createParticleExplosion(x, y, type = 'normal') {
+            const particles = ['🐱', '✨', '🌟', '💫'];
+            const colors = ['#8D4500', '#D2691E', '#FF8C00'];
+            let particleCount = type === 'big' ? 6 : 3;
+            let explosionColor = colors[Math.floor(Math.random() * colors.length)];
+            
+            const explosion = document.createElement('div');
+            explosion.className = 'explosion-effect';
+            explosion.style.left = (x - 30) + 'px';
+            explosion.style.top = (y - 30) + 'px';
+            explosion.style.background = `radial-gradient(circle, ${explosionColor}30, transparent)`;
+            document.getElementById('effectParticles').appendChild(explosion);
+            
+            setTimeout(() => {
+                if (explosion.parentNode) {
+                    explosion.parentNode.removeChild(explosion);
+                }
+            }, 500);
+            
+            for (let i = 0; i < particleCount; i++) {
+                const particle = document.createElement('div');
+                particle.className = 'particle';
+                particle.textContent = particles[Math.floor(Math.random() * particles.length)];
+                
+                const angle = (360 / particleCount) * i;
+                const distance = type === 'big' ? 80 : 50;
+                const radian = (angle * Math.PI) / 180;
+                
+                particle.style.left = x + 'px';
+                particle.style.top = y + 'px';
+                particle.style.transform = `translate(${Math.cos(radian) * distance}px, ${Math.sin(radian) * distance}px)`;
+                
+                document.getElementById('effectParticles').appendChild(particle);
+                
+                setTimeout(() => {
+                    if (particle.parentNode) {
+                        particle.parentNode.removeChild(particle);
+                    }
+                }, 2000);
+            }
+        }
+        
+        // 入力モード切り替え
+        function toggleInputMode() {
+            game.flickMode = !game.flickMode;
+            const switchBtn = document.getElementById('inputModeSwitch');
+            switchBtn.textContent = game.flickMode ? 'フリック入力' : 'ケータイ入力';
+        }
+        
+        // 濁点・小文字モード切り替え
+        function toggleDakuten() {
+            game.dakutenMode = !game.dakutenMode;
+            const dakutenBtn = document.querySelector('.key-dakuten');
+            dakutenBtn.style.background = game.dakutenMode ? '#007AFF' : '#acb2b9';
+            dakutenBtn.style.color = game.dakutenMode ? 'white' : '#000';
+        }
+        
+        // フリック・ケータイ入力処理
+        let touchData = {
+            startX: 0,
+            startY: 0,
+            currentKey: null,
+            isFlicking: false
+        };
+        
+        function setupFlickInput() {
+            const kanaKeys = document.querySelectorAll('.kana-key[data-chars]');
+            
+            kanaKeys.forEach(key => {
+                // タッチ開始
+                key.addEventListener('touchstart', (e) => {
+                    e.preventDefault();
+                    const touch = e.touches[0];
+                    touchData.startX = touch.clientX;
+                    touchData.startY = touch.clientY;
+                    touchData.currentKey = key;
+                    touchData.isFlicking = false;
+                    
+                    if (game.flickMode) {
+                        showFlickPopup(key);
+                    }
+                });
+                
+                // タッチ移動
+                key.addEventListener('touchmove', (e) => {
+                    if (!touchData.currentKey || !game.flickMode) return;
+                    e.preventDefault();
+                    
+                    const touch = e.touches[0];
+                    const deltaX = touch.clientX - touchData.startX;
+                    const deltaY = touch.clientY - touchData.startY;
+                    const distance = Math.sqrt(deltaX * deltaX + deltaY * deltaY);
+                    
+                    if (distance > 20) {
+                        touchData.isFlicking = true;
+                        updateFlickPopup(key, deltaX, deltaY);
+                    }
+                });
+                
+                // タッチ終了
+                key.addEventListener('touchend', (e) => {
+                    e.preventDefault();
+                    if (!touchData.currentKey) return;
+                    
+                    let inputChar;
+                    if (game.flickMode && touchData.isFlicking) {
+                        // フリック入力
+                        const touch = e.changedTouches[0];
+                        const deltaX = touch.clientX - touchData.startX;
+                        const deltaY = touch.clientY - touchData.startY;
+                        inputChar = getFlickChar(key, deltaX, deltaY);
+                    } else {
+                        // ケータイ入力（連続タップ方式）
+                        handleTapInput(key);
+                        hideFlickPopup();
+                        touchData.currentKey = null;
+                        return;
+                    }
+                    
+                    if (inputChar) {
+                        inputKana(inputChar);
+                    }
+                    
+                    hideFlickPopup();
+                    touchData.currentKey = null;
+                    touchData.isFlicking = false;
+                });
+                
+                // クリック（PC用）
+                key.addEventListener('click', (e) => {
+                    e.preventDefault();
+                    if (touchData.currentKey) return; // タッチ処理中は無視
+                    
+                    if (game.flickMode) {
+                        const chars = key.dataset.chars;
+                        if (chars) {
+                            inputKana(chars[0]); // 最初の文字
+                        }
+                    } else {
+                        handleTapInput(key);
+                    }
+                });
+            });
+        }
+        
+        // ケータイ入力処理（連続タップ方式）
+        function handleTapInput(key) {
+            const chars = key.dataset.chars;
+            if (!chars) return;
+            
+            // 同じキーの連続タップ
+            if (tapData.currentKey === key) {
+                tapData.tapCount = (tapData.tapCount + 1) % chars.length;
+            } else {
+                // 新しいキー
+                if (tapData.currentKey && tapData.tapTimer) {
+                    // 前のキーの文字を確定
+                    const prevChars = tapData.currentKey.dataset.chars;
+                    if (prevChars) {
+                        inputKana(prevChars[tapData.tapCount]);
+                    }
+                }
+                tapData.currentKey = key;
+                tapData.tapCount = 0;
+            }
+            
+            // タイマーをリセット
+            if (tapData.tapTimer) {
+                clearTimeout(tapData.tapTimer);
+            }
+            
+            // 現在の文字を表示（仮）
+            console.log('ケータイ入力:', chars[tapData.tapCount]);
+            
+            // 1秒後に文字を確定
+            tapData.tapTimer = setTimeout(() => {
+                if (tapData.currentKey) {
+                    const currentChars = tapData.currentKey.dataset.chars;
+                    if (currentChars) {
+                        inputKana(currentChars[tapData.tapCount]);
+                    }
+                    tapData.currentKey = null;
+                    tapData.tapCount = 0;
+                }
+            }, 1000);
+        }
+        
+        function showFlickPopup(key) {
+            const popup = document.createElement('div');
+            popup.className = 'flick-popup';
+            popup.id = 'flickPopup';
+            
+            const chars = key.dataset.chars;
+            if (!chars) return;
+            
+            // フリック方向に文字を配置
+            let charsHtml = '';
+            charsHtml += `<div class="flick-char center active">${chars[0] || ''}</div>`; // 中央
+            charsHtml += `<div class="flick-char up">${chars[2] || ''}</div>`; // 上
+            charsHtml += `<div class="flick-char right">${chars[3] || ''}</div>`; // 右
+            charsHtml += `<div class="flick-char down">${chars[4] || ''}</div>`; // 下
+            charsHtml += `<div class="flick-char left">${chars[1] || ''}</div>`; // 左
+            
+            popup.innerHTML = `<div class="flick-chars">${charsHtml}</div>`;
+            key.appendChild(popup);
+            popup.style.display = 'block';
+        }
+        
+        function updateFlickPopup(key, deltaX, deltaY) {
+            const popup = document.getElementById('flickPopup');
+            if (!popup) return;
+            
+            const chars = popup.querySelectorAll('.flick-char');
+            
+            // フリック方向を判定
+            let direction = 'center';
+            const threshold = 30;
+            
+            if (Math.abs(deltaX) > threshold || Math.abs(deltaY) > threshold) {
+                if (Math.abs(deltaX) > Math.abs(deltaY)) {
+                    direction = deltaX > 0 ? 'right' : 'left';
+                } else {
+                    direction = deltaY < 0 ? 'up' : 'down';
+                }
+            }
+            
+            // アクティブな文字を更新
+            chars.forEach(char => {
+                char.classList.remove('active');
+                if (char.classList.contains(direction)) {
+                    char.classList.add('active');
+                }
+            });
+        }
+        
+        function getFlickChar(key, deltaX, deltaY) {
+            const chars = key.dataset.chars;
+            if (!chars) return null;
+            
+            let direction = 0; // 0:中央, 1:左, 2:上, 3:右, 4:下
+            const threshold = 30;
+            
+            if (Math.abs(deltaX) > threshold || Math.abs(deltaY) > threshold) {
+                if (Math.abs(deltaX) > Math.abs(deltaY)) {
+                    direction = deltaX > 0 ? 3 : 1; // 右 or 左
+                } else {
+                    direction = deltaY < 0 ? 2 : 4; // 上 or 下
+                }
+            }
+            
+            return chars[direction] || chars[0];
+        }
+        
+        function hideFlickPopup() {
+            const popup = document.getElementById('flickPopup');
+            if (popup) {
+                popup.remove();
+            }
+        }
+        
+        // ゲーム開始
+        function startGame(course) {
+            console.log('NEKOPON RENDA開始:', course);
+            initAudioContext();
+            
+            game.active = true;
+            game.course = course;
+            game.words = [...dailyWords[course]];
+            game.currentWord = 0;
+            game.currentChar = 0;
+            game.currentInput = '';
+            game.score = 0;
+            game.time = 60;
+            game.correct = 0;
+            game.total = 0;
+            game.combo = 0;
+            game.maxCombo = 0;
+            
+            // シャッフル
+            for (let i = game.words.length - 1; i > 0; i--) {
+                const j = Math.floor(Math.random() * (i + 1));
+                [game.words[i], game.words[j]] = [game.words[j], game.words[i]];
+            }
+            
+            game.targetWord = game.words[game.currentWord];
+            
+            document.getElementById('menu').style.display = 'none';
+            document.getElementById('game').style.display = 'flex';
+            
+            updateDisplay();
+            startTimer();
+            playNekoSound('complete', 1.2);
+        }
+        
+        function updateDisplay() {
+            const targetWord = game.targetWord;
+            const romajiWord = toRomaji(targetWord);
+            
+            // 日本語表示
+            let japaneseHtml = '';
+            for (let i = 0; i < targetWord.length; i++) {
+                if (i < game.currentChar) {
+                    japaneseHtml += `<span class="typed">${targetWord[i]}</span>`;
+                } else if (i === game.currentChar) {
+                    japaneseHtml += `<span class="current">${targetWord[i]}</span>`;
+                } else {
+                    japaneseHtml += `<span class="remaining">${targetWord[i]}</span>`;
+                }
+            }
+            document.getElementById('word').innerHTML = japaneseHtml;
+            
+            // ローマ字表示
+            document.getElementById('romaji').textContent = romajiWord;
+            
+            document.getElementById('score').textContent = game.score;
+            const accuracy = game.total > 0 ? Math.round((game.correct / game.total) * 100) : 100;
+            document.getElementById('accuracy').textContent = accuracy + '%';
+            
+            // プログレスバー
+            const progress = (game.currentChar / targetWord.length) * 100;
+            document.getElementById('progress').style.width = progress + '%';
+        }
+        
+        function updateCombo() {
+            const comboElement = document.getElementById('combo');
+            if (game.combo > 4) {
+                comboElement.innerHTML = `<div class="combo-text">${game.combo} COMBO!</div>`;
+                game.maxCombo = Math.max(game.maxCombo, game.combo);
+            } else {
+                comboElement.innerHTML = '';
+            }
+        }
+        
+        function startTimer() {
+            if (game.timer) clearInterval(game.timer);
+            
+            game.timer = setInterval(() => {
+                game.time--;
+                document.getElementById('time').textContent = game.time;
+                
+                if (game.time <= 0) {
+                    endGame();
+                }
+            }, 1000);
+        }
+        
+        function endGame() {
+            game.active = false;
+            if (game.timer) {
+                clearInterval(game.timer);
+                game.timer = null;
+            }
+            
+            // フィナーレエフェクト
+            for (let i = 0; i < 10; i++) {
+                setTimeout(() => {
+                    createParticleExplosion(
+                        Math.random() * window.innerWidth,
+                        Math.random() * (window.innerHeight - 280),
+                        'big'
+                    );
+                }, i * 150);
+            }
+            
+            playNekoSound('complete', 2);
+            setTimeout(showResults, 1500);
+        }
+        
+        function showResults() {
+            const targets = {
+                easy: 1000,
+                normal: 2000,
+                hard: 3500,
+                expert: 5000
+            };
+            const target = targets[game.course];
+            const accuracy = game.total > 0 ? Math.round((game.correct / game.total) * 100) : 100;
+            
+            let rank = '';
+            if (game.score >= target * 1.5) {
+                rank = '👑 NEKOPON 伝説 👑';
+            } else if (game.score >= target) {
+                rank = '🌟 目標達成にゃ〜！ 🌟';
+            } else if (game.score >= target * 0.8) {
+                rank = '🐱 もう少しにゃ〜 🐱';
+            } else {
+                rank = '💪 練習するにゃ〜 💪';
+            }
+            
+            document.getElementById('result-text').innerHTML = `
+                <div style="font-size: 1.2em; margin: 15px 0;">${rank}</div>
+                <div style="margin: 10px 0;"><strong>✨ スコア:</strong> ${game.score} / ${target}</div>
+                <div style="margin: 10px 0;"><strong>🔥 正確率:</strong> ${accuracy}%</div>
+                <div style="margin: 10px 0;"><strong>🏆 最大コンボ:</strong> ${game.maxCombo}回</div>
+                <div style="margin: 10px 0;"><strong>💕 入力文字数:</strong> ${game.correct}文字</div>
+            `;
+            
+            document.getElementById('game').style.display = 'none';
+            document.getElementById('result').style.display = 'block';
+            playNekoSound('complete', 1.5);
+        }
+        
+        function resetGame() {
+            document.getElementById('result').style.display = 'none';
+            document.getElementById('menu').style.display = 'block';
+            document.getElementById('time').textContent = '60';
+            document.getElementById('score').textContent = '0';
+            document.getElementById('accuracy').textContent = '100%';
+            document.getElementById('combo').innerHTML = '';
+            document.getElementById('progress').style.width = '0%';
+            
+            if (game.timer) {
+                clearInterval(game.timer);
+                game.timer = null;
+            }
+        }
+        
+        // かな文字入力処理
+        function inputKana(char) {
+            if (!game.active) return;
+            
+            if (char === 'backspace') {
+                if (game.currentInput.length > 0) {
+                    game.currentInput = game.currentInput.slice(0, -1);
+                    game.currentChar = game.currentInput.length;
+                }
+                updateDisplay();
+                return;
+            }
+            
+            if (char === 'enter' || char === ' ') return;
+            
+            // 濁点・小文字処理
+            if (game.dakutenMode && char) {
+                char = convertToDakuten(char);
+                game.dakutenMode = false;
+                toggleDakuten();
+            }
+            
+            game.total++;
+            game.currentInput += char;
+            
+            console.log('かな入力:', char, '現在の入力:', game.currentInput, '目標:', game.targetWord);
+            
+            if (game.targetWord.startsWith(game.currentInput)) {
+                // 正解
+                game.correct++;
+                game.currentChar = game.currentInput.length;
+                game.combo++;
+                
+                // スコア計算
+                let baseScore = 15;
+                let comboBonus = Math.floor(game.combo / 3) * 8;
+                let timeBonus = game.time > 40 ? 7 : 0;
+                game.score += baseScore + comboBonus + timeBonus;
+                
+                playNekoSound('success', 1);
+                updateCombo();
+                
+                // パーティクルエフェクト
+                createParticleExplosion(
+                    Math.random() * window.innerWidth * 0.8 + window.innerWidth * 0.1,
+                    Math.random() * (window.innerHeight - 280) * 0.6
+                );
+                
+                // 単語完成チェック
+                if (game.currentInput === game.targetWord) {
+                    // 単語完成
+                    game.score += 100;
+                    game.combo += 10;
+                    game.currentWord = (game.currentWord + 1) % game.words.length;
+                    game.currentChar = 0;
+                    game.currentInput = '';
+                    
+                    if (game.currentWord === 0) {
+                        // 全単語完了、シャッフル
+                        for (let i = game.words.length - 1; i > 0; i--) {
+                            const j = Math.floor(Math.random() * (i + 1));
+                            [game.words[i], game.words[j]] = [game.words[j], game.words[i]];
+                        }
+                    }
+                    
+                    game.targetWord = game.words[game.currentWord];
+                    console.log('新しい単語:', game.targetWord);
+                    
+                    // 単語完成エフェクト
+                    for (let i = 0; i < 5; i++) {
+                        setTimeout(() => {
+                            createParticleExplosion(
+                                Math.random() * window.innerWidth,
+                                Math.random() * (window.innerHeight - 280) * 0.8,
+                                'big'
+                            );
+                        }, i * 100);
+                    }
+                    
+                    playNekoSound('complete', 1.3);
+                }
+            } else {
+                // 不正解
+                game.combo = 0;
+                game.currentInput = ''; // リセット
+                game.currentChar = 0;
+                updateCombo();
+            }
+            
+            updateDisplay();
+        }
+        
+        // 濁点・小文字変換
+        function convertToDakuten(char) {
+            const dakutenMap = {
+                'か': 'が', 'き': 'ぎ', 'く': 'ぐ', 'け': 'げ', 'こ': 'ご',
+                'さ': 'ざ', 'し': 'じ', 'す': 'ず', 'せ': 'ぜ', 'そ': 'ぞ',
+                'た': 'だ', 'ち': 'ぢ', 'つ': 'づ', 'て': 'で', 'と': 'ど',
+                'は': 'ば', 'ひ': 'び', 'ふ': 'ぶ', 'へ': 'べ', 'ほ': 'ぼ',
+                'ば': 'ぱ', 'び': 'ぴ', 'ぶ': 'ぷ', 'べ': 'ぺ', 'ぼ': 'ぽ',
+                'や': 'ゃ', 'ゆ': 'ゅ', 'よ': 'ょ', 'つ': 'っ'
+            };
+            return dakutenMap[char] || char;
+        }
+        
+        // 初期化
+        document.addEventListener('DOMContentLoaded', function() {
+            setupFlickInput();
+        });
+        
+        document.addEventListener('click', initAudioContext, { once: true });
+        
+        console.log('🐱 NEKOPON RENDA 完全版 初期化完了！ 🐱');
+    </script>
+</body>
+</html>
